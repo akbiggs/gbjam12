@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://dx46ltq4ix8h4"]
+
+[ext_resource type="Texture2D" uid="uid://cih3kkvrl4xed" path="res://spritesheet.png" id="1_ngt6m"]
+[ext_resource type="Script" path="res://Scripts/smoke.gd" id="2_65854"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aviij"]
+atlas = ExtResource("1_ngt6m")
+region = Rect2(88, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m2jle"]
+atlas = ExtResource("1_ngt6m")
+region = Rect2(96, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfeep"]
+atlas = ExtResource("1_ngt6m")
+region = Rect2(104, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_asdcq"]
+atlas = ExtResource("1_ngt6m")
+region = Rect2(112, 24, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_soeos"]
+animations = [{
+"frames": [{
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_aviij")
+}, {
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_m2jle")
+}, {
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_rfeep")
+}, {
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_asdcq")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Smoke" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_soeos")
+autoplay = "default"
+script = ExtResource("2_65854")
