@@ -1,15 +1,18 @@
-[gd_scene load_steps=51 format=4 uid="uid://dyhdyxn32vqjc"]
+[gd_scene load_steps=59 format=4 uid="uid://dyhdyxn32vqjc"]
 
 [ext_resource type="Script" path="res://Scripts/stats.gd" id="1_dcqpf"]
 [ext_resource type="Texture2D" uid="uid://cih3kkvrl4xed" path="res://spritesheet.png" id="1_dtj6x"]
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="2_t073q"]
 [ext_resource type="FontFile" uid="uid://chhsiu4x5shex" path="res://Fonts/m3x6.ttf" id="3_7vt67"]
+[ext_resource type="Script" path="res://Scenes/items.gd" id="3_mhhcr"]
 [ext_resource type="FontFile" uid="uid://bma8nu0sxtvno" path="res://Fonts/BigBlue_Terminal_437TT.TTF" id="4_70e2g"]
 [ext_resource type="Script" path="res://Scripts/player.gd" id="5_naxap"]
 [ext_resource type="Script" path="res://Scripts/skeleton.gd" id="5_xx8fr"]
 [ext_resource type="Script" path="res://Scripts/wake_with_room.gd" id="6_0506l"]
+[ext_resource type="Script" path="res://Scripts/save_point.gd" id="6_ckh50"]
 [ext_resource type="Script" path="res://Scripts/campfire.gd" id="6_u3vcg"]
 [ext_resource type="Script" path="res://Scripts/camera.gd" id="7_lkgh4"]
+[ext_resource type="Script" path="res://Scripts/references.gd" id="13_wfxf6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s80gp"]
 texture = ExtResource("1_dtj6x")
@@ -24,10 +27,19 @@ texture_region_size = Vector2i(8, 8)
 7:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
 8:2/0 = 0
 8:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+7:4/0 = 0
+7:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+8:4/0 = 0
+8:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+7:3/0 = 0
+7:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+8:3/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_njjcm"]
 tile_size = Vector2i(8, 8)
 physics_layer_0/collision_layer = 1
+custom_data_layer_0/name = "flag"
+custom_data_layer_0/type = 2
 sources/0 = SubResource("TileSetAtlasSource_s80gp")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8o8e4"]
@@ -238,6 +250,18 @@ animations = [{
 "speed": 14.0
 }]
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nknlm"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 18.82
+initial_velocity_max = 52.48
+angular_velocity_min = -22.8
+angular_velocity_max = -1.60933e-05
+gravity = Vector3(0, 0, 0)
+damping_min = 41.129
+damping_max = 51.882
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_882ar"]
 atlas = ExtResource("1_dtj6x")
 region = Rect2(72, 16, 8, 8)
@@ -267,6 +291,25 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kt5xs"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(24, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fnmjl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kt5xs")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1jsbd"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(64, 8, 8, 8)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_t6vv7"]
 atlas = ExtResource("1_dtj6x")
 region = Rect2(40, 8, 8, 8)
@@ -285,6 +328,14 @@ region = Rect2(40, 8, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lesjy"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1jsbd")
+}],
+"loop": true,
+"name": &"angry",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_t6vv7")
@@ -313,6 +364,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_um4nt"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(4, 4, 0)
+emission_shape = 3
+emission_box_extents = Vector3(4, 2, 1)
+spread = 72.304
+gravity = Vector3(0, -10, 0)
+
 [sub_resource type="LabelSettings" id="LabelSettings_bk8fu"]
 line_spacing = 0.0
 font = ExtResource("3_7vt67")
@@ -322,6 +381,10 @@ font_color = Color(0, 0, 0, 1)
 font_color = Color(0, 0, 0, 1)
 
 [node name="Root" type="Node2D"]
+
+[node name="Terrain" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAATAAIAAAABAAEAAAATAAMAAAABAAEAAAATAAQAAAABAAEAAAATAAUAAAABAAEAAAATAAYAAAABAAEAAAATAAoAAAABAAEAAAATAAsAAAABAAEAAAATAAwAAAABAAEAAAATAA0AAAABAAEAAAATAA4AAAABAAEAAAATAA8AAAABAAEAAAATABAAAAABAAEAAAATABEAAAABAAEAAAASABEAAAABAAEAAAARABEAAAABAAEAAAAQABEAAAABAAEAAAAPABEAAAABAAEAAAAOABEAAAABAAEAAAANABEAAAABAAEAAAAMABEAAAABAAEAAAAIABEAAAABAAEAAAAHABEAAAABAAEAAAAGABEAAAABAAEAAAAFABEAAAABAAEAAAAEABEAAAABAAEAAAADABEAAAABAAEAAAACABEAAAABAAEAAAABABEAAAABAAEAAAAAABEAAAABAAEAAAAAABAAAAABAAEAAAAAAA8AAAABAAEAAAAAAA4AAAABAAEAAAAAAA0AAAABAAEAAAAAAAwAAAABAAEAAAAAAAsAAAABAAEAAAAAAAoAAAABAAEAAAAAAAkAAAABAAEAAAAAAAgAAAABAAEAAAAAAAcAAAABAAEAAAAAAAYAAAABAAEAAAAAAAUAAAABAAEAAAAAAAQAAAABAAEAAAAAAAMAAAABAAEAAAAAAAIAAAABAAEAAAABAAIAAAABAAEAAAACAAIAAAABAAEAAAADAAIAAAABAAEAAAAEAAIAAAABAAEAAAAFAAIAAAABAAEAAAAGAAIAAAABAAEAAAAHAAIAAAABAAEAAAAIAAIAAAABAAEAAAAMAAIAAAABAAEAAAANAAIAAAABAAEAAAAOAAIAAAABAAEAAAAPAAIAAAABAAEAAAAQAAIAAAABAAEAAAARAAIAAAABAAEAAAASAAIAAAABAAEAAAAIAAoAAAAAAAEAAAAIAAYAAAAAAAEAAAAMAAYAAAAAAAEAAAAMAAoAAAAAAAEAAAABAAUAAAADAAEAAAABABAAAAACAAEAAAAIABIAAAAHAAIAAAAIABMAAAAHAAIAAAAIABQAAAAHAAIAAAAIABUAAAAHAAIAAAAIABYAAAAHAAIAAAAIABcAAAAHAAIAAAAIABgAAAAHAAIAAAAIABkAAAAHAAIAAAAIABoAAAAHAAIAAAAIABsAAAAHAAIAAAAIABwAAAAHAAIAAAAIAB0AAAAHAAIAAAAIAB4AAAAHAAIAAAAIAB8AAAAHAAIAAAAIACAAAAAHAAIAAAAIACEAAAAHAAIAAAAMABIAAAAIAAIAAAAMABMAAAAIAAIAAAAMABQAAAAIAAIAAAAMABUAAAAIAAIAAAAMABYAAAAIAAIAAAAMABcAAAAIAAIAAAAMABgAAAAIAAIAAAANABgAAAAIAAIAAAAOABgAAAAIAAIAAAAPABgAAAAIAAIAAAAQABgAAAAIAAIAAAAQABkAAAAIAAIAAAAQABoAAAAIAAIAAAAQABsAAAAIAAIAAAAQABwAAAAIAAIAAAAQAB0AAAAIAAIAAAAPAB0AAAAIAAIAAAAOAB0AAAAIAAIAAAANAB0AAAAIAAIAAAAMAB0AAAAIAAIAAAAMAB4AAAAIAAIAAAAMAB8AAAAIAAIAAAAMACAAAAAIAAIAAAAMACEAAAAIAAIAAAAIACIAAAAHAAIAAAAHACIAAAAHAAIAAAAGACIAAAAHAAIAAAAFACIAAAAHAAIAAAAEACIAAAAHAAIAAAADACIAAAAHAAIAAAACACIAAAAHAAIAAAACACMAAAAHAAIAAAACACQAAAAHAAIAAAACACUAAAAHAAIAAAACACYAAAAHAAIAAAACACcAAAAHAAIAAAACACgAAAAHAAIAAAACACkAAAAHAAIAAAACACoAAAAHAAIAAAACACsAAAAHAAIAAAACACwAAAAHAAIAAAACAC0AAAAHAAIAAAACAC4AAAAHAAIAAAADAC4AAAAHAAIAAAAEAC4AAAAHAAIAAAAFAC4AAAAHAAIAAAAGAC4AAAAHAAIAAAAHAC4AAAAHAAIAAAAIAC4AAAAHAAIAAAAJAC4AAAAHAAIAAAAKAC4AAAAHAAIAAAALAC4AAAAHAAIAAAAMAC4AAAAHAAIAAAANAC4AAAAHAAIAAAAOAC4AAAAHAAIAAAAPAC4AAAAHAAIAAAAQAC4AAAAHAAIAAAARAC4AAAAHAAIAAAAMACIAAAAHAAIAAAANACIAAAAHAAIAAAAOACIAAAAHAAIAAAAPACIAAAAHAAIAAAAQACIAAAAHAAIAAAARACIAAAAHAAIAAAASACIAAAAHAAIAAAASACMAAAAHAAIAAAASACQAAAAHAAIAAAASACUAAAAHAAIAAAASACYAAAAHAAIAAAASACcAAAAHAAIAAAASACgAAAAHAAIAAAASACkAAAAHAAIAAAASACoAAAAHAAIAAAASACsAAAAHAAIAAAASACwAAAAHAAIAAAASAC0AAAAHAAIAAAASAC4AAAAHAAIAAAAUAAYAAAABAAEAAAAUAAUAAAABAAEAAAAUAAQAAAABAAEAAAAUAAMAAAABAAEAAAAUAAIAAAABAAEAAAAVAAIAAAABAAEAAAAWAAIAAAABAAEAAAAXAAIAAAABAAEAAAAYAAIAAAABAAEAAAAZAAIAAAABAAEAAAAaAAIAAAABAAEAAAAbAAIAAAABAAEAAAAcAAIAAAABAAEAAAAdAAIAAAABAAEAAAAeAAIAAAABAAEAAAAfAAIAAAABAAEAAAAgAAIAAAABAAEAAAAhAAIAAAABAAEAAAAiAAIAAAABAAEAAAAjAAIAAAABAAEAAAAkAAIAAAABAAEAAAAlAAIAAAABAAEAAAAmAAIAAAABAAEAAAAnAAIAAAABAAEAAAAnAAMAAAABAAEAAAAnAAQAAAABAAEAAAAnAAUAAAABAAEAAAAnAAYAAAABAAEAAAAnAAcAAAABAAEAAAAnAAgAAAABAAEAAAAnAAkAAAABAAEAAAAnAAoAAAABAAEAAAAnAAsAAAABAAEAAAAnAAwAAAABAAEAAAAnAA0AAAABAAEAAAAnAA4AAAABAAEAAAAnAA8AAAABAAEAAAAnABAAAAABAAEAAAAnABEAAAABAAEAAAAmABEAAAABAAEAAAAlABEAAAABAAEAAAAkABEAAAABAAEAAAAjABEAAAABAAEAAAAiABEAAAABAAEAAAAhABEAAAABAAEAAAAgABEAAAABAAEAAAAfABEAAAABAAEAAAAeABEAAAABAAEAAAAdABEAAAABAAEAAAAcABEAAAABAAEAAAAbABEAAAABAAEAAAAaABEAAAABAAEAAAAZABEAAAABAAEAAAAYABEAAAABAAEAAAAXABEAAAABAAEAAAAWABEAAAABAAEAAAAVABEAAAABAAEAAAAUABEAAAABAAEAAAAUABAAAAABAAEAAAAUAA8AAAABAAEAAAAUAA4AAAABAAEAAAAUAA0AAAABAAEAAAAUAAwAAAABAAEAAAAUAAsAAAABAAEAAAAUAAoAAAABAAEAAAA=")
+tile_set = SubResource("TileSet_njjcm")
 
 [node name="Camera" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 unique_name_in_owner = true
@@ -335,9 +398,8 @@ player = NodePath("../Entities/Player")
 [node name="Stats" type="Node2D" parent="Utilities"]
 script = ExtResource("1_dcqpf")
 
-[node name="Terrain" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAATAAIAAAABAAEAAAATAAMAAAABAAEAAAATAAQAAAABAAEAAAATAAUAAAABAAEAAAATAAYAAAABAAEAAAATAAoAAAABAAEAAAATAAsAAAABAAEAAAATAAwAAAABAAEAAAATAA0AAAABAAEAAAATAA4AAAABAAEAAAATAA8AAAABAAEAAAATABAAAAABAAEAAAATABEAAAABAAEAAAASABEAAAABAAEAAAARABEAAAABAAEAAAAQABEAAAABAAEAAAAPABEAAAABAAEAAAAOABEAAAABAAEAAAANABEAAAABAAEAAAAMABEAAAABAAEAAAAIABEAAAABAAEAAAAHABEAAAABAAEAAAAGABEAAAABAAEAAAAFABEAAAABAAEAAAAEABEAAAABAAEAAAADABEAAAABAAEAAAACABEAAAABAAEAAAABABEAAAABAAEAAAAAABEAAAABAAEAAAAAABAAAAABAAEAAAAAAA8AAAABAAEAAAAAAA4AAAABAAEAAAAAAA0AAAABAAEAAAAAAAwAAAABAAEAAAAAAAsAAAABAAEAAAAAAAoAAAABAAEAAAAAAAkAAAABAAEAAAAAAAgAAAABAAEAAAAAAAcAAAABAAEAAAAAAAYAAAABAAEAAAAAAAUAAAABAAEAAAAAAAQAAAABAAEAAAAAAAMAAAABAAEAAAAAAAIAAAABAAEAAAABAAIAAAABAAEAAAACAAIAAAABAAEAAAADAAIAAAABAAEAAAAEAAIAAAABAAEAAAAFAAIAAAABAAEAAAAGAAIAAAABAAEAAAAHAAIAAAABAAEAAAAIAAIAAAABAAEAAAAMAAIAAAABAAEAAAANAAIAAAABAAEAAAAOAAIAAAABAAEAAAAPAAIAAAABAAEAAAAQAAIAAAABAAEAAAARAAIAAAABAAEAAAASAAIAAAABAAEAAAAIAAoAAAAAAAEAAAAIAAYAAAAAAAEAAAAMAAYAAAAAAAEAAAAMAAoAAAAAAAEAAAABAAUAAAADAAEAAAABABAAAAACAAEAAAAIABIAAAAHAAIAAAAIABMAAAAHAAIAAAAIABQAAAAHAAIAAAAIABUAAAAHAAIAAAAIABYAAAAHAAIAAAAIABcAAAAHAAIAAAAIABgAAAAHAAIAAAAIABkAAAAHAAIAAAAIABoAAAAHAAIAAAAIABsAAAAHAAIAAAAIABwAAAAHAAIAAAAIAB0AAAAHAAIAAAAIAB4AAAAHAAIAAAAIAB8AAAAHAAIAAAAIACAAAAAHAAIAAAAIACEAAAAHAAIAAAAMABIAAAAIAAIAAAAMABMAAAAIAAIAAAAMABQAAAAIAAIAAAAMABUAAAAIAAIAAAAMABYAAAAIAAIAAAAMABcAAAAIAAIAAAAMABgAAAAIAAIAAAANABgAAAAIAAIAAAAOABgAAAAIAAIAAAAPABgAAAAIAAIAAAAQABgAAAAIAAIAAAAQABkAAAAIAAIAAAAQABoAAAAIAAIAAAAQABsAAAAIAAIAAAAQABwAAAAIAAIAAAAQAB0AAAAIAAIAAAAPAB0AAAAIAAIAAAAOAB0AAAAIAAIAAAANAB0AAAAIAAIAAAAMAB0AAAAIAAIAAAAMAB4AAAAIAAIAAAAMAB8AAAAIAAIAAAAMACAAAAAIAAIAAAAMACEAAAAIAAIAAAAIACIAAAAHAAIAAAAHACIAAAAHAAIAAAAGACIAAAAHAAIAAAAFACIAAAAHAAIAAAAEACIAAAAHAAIAAAADACIAAAAHAAIAAAACACIAAAAHAAIAAAACACMAAAAHAAIAAAACACQAAAAHAAIAAAACACUAAAAHAAIAAAACACYAAAAHAAIAAAACACcAAAAHAAIAAAACACgAAAAHAAIAAAACACkAAAAHAAIAAAACACoAAAAHAAIAAAACACsAAAAHAAIAAAACACwAAAAHAAIAAAACAC0AAAAHAAIAAAACAC4AAAAHAAIAAAADAC4AAAAHAAIAAAAEAC4AAAAHAAIAAAAFAC4AAAAHAAIAAAAGAC4AAAAHAAIAAAAHAC4AAAAHAAIAAAAIAC4AAAAHAAIAAAAJAC4AAAAHAAIAAAAKAC4AAAAHAAIAAAALAC4AAAAHAAIAAAAMAC4AAAAHAAIAAAANAC4AAAAHAAIAAAAOAC4AAAAHAAIAAAAPAC4AAAAHAAIAAAAQAC4AAAAHAAIAAAARAC4AAAAHAAIAAAAMACIAAAAHAAIAAAANACIAAAAHAAIAAAAOACIAAAAHAAIAAAAPACIAAAAHAAIAAAAQACIAAAAHAAIAAAARACIAAAAHAAIAAAASACIAAAAHAAIAAAASACMAAAAHAAIAAAASACQAAAAHAAIAAAASACUAAAAHAAIAAAASACYAAAAHAAIAAAASACcAAAAHAAIAAAASACgAAAAHAAIAAAASACkAAAAHAAIAAAASACoAAAAHAAIAAAASACsAAAAHAAIAAAASACwAAAAHAAIAAAASAC0AAAAHAAIAAAASAC4AAAAHAAIAAAAUAAYAAAABAAEAAAAUAAUAAAABAAEAAAAUAAQAAAABAAEAAAAUAAMAAAABAAEAAAAUAAIAAAABAAEAAAAVAAIAAAABAAEAAAAWAAIAAAABAAEAAAAXAAIAAAABAAEAAAAYAAIAAAABAAEAAAAZAAIAAAABAAEAAAAaAAIAAAABAAEAAAAbAAIAAAABAAEAAAAcAAIAAAABAAEAAAAdAAIAAAABAAEAAAAeAAIAAAABAAEAAAAfAAIAAAABAAEAAAAgAAIAAAABAAEAAAAhAAIAAAABAAEAAAAiAAIAAAABAAEAAAAjAAIAAAABAAEAAAAkAAIAAAABAAEAAAAlAAIAAAABAAEAAAAmAAIAAAABAAEAAAAnAAIAAAABAAEAAAAnAAMAAAABAAEAAAAnAAQAAAABAAEAAAAnAAUAAAABAAEAAAAnAAYAAAABAAEAAAAnAAcAAAABAAEAAAAnAAgAAAABAAEAAAAnAAkAAAABAAEAAAAnAAoAAAABAAEAAAAnAAsAAAABAAEAAAAnAAwAAAABAAEAAAAnAA0AAAABAAEAAAAnAA4AAAABAAEAAAAnAA8AAAABAAEAAAAnABAAAAABAAEAAAAnABEAAAABAAEAAAAmABEAAAABAAEAAAAlABEAAAABAAEAAAAkABEAAAABAAEAAAAjABEAAAABAAEAAAAiABEAAAABAAEAAAAhABEAAAABAAEAAAAgABEAAAABAAEAAAAfABEAAAABAAEAAAAeABEAAAABAAEAAAAdABEAAAABAAEAAAAcABEAAAABAAEAAAAbABEAAAABAAEAAAAaABEAAAABAAEAAAAZABEAAAABAAEAAAAYABEAAAABAAEAAAAXABEAAAABAAEAAAAWABEAAAABAAEAAAAVABEAAAABAAEAAAAUABEAAAABAAEAAAAUABAAAAABAAEAAAAUAA8AAAABAAEAAAAUAA4AAAABAAEAAAAUAA0AAAABAAEAAAAUAAwAAAABAAEAAAAUAAsAAAABAAEAAAAUAAoAAAABAAEAAAA=")
-tile_set = SubResource("TileSet_njjcm")
+[node name="Items" type="Node2D" parent="Utilities"]
+script = ExtResource("3_mhhcr")
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -384,6 +446,7 @@ centered = false
 [node name="SavePoint1" type="CharacterBody2D" parent="Entities/World1"]
 position = Vector2(80, 64)
 motion_mode = 1
+script = ExtResource("6_ckh50")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/SavePoint1"]
@@ -395,6 +458,14 @@ sprite_frames = SubResource("SpriteFrames_4hrw6")
 autoplay = "default"
 frame_progress = 0.379937
 centered = false
+
+[node name="ParticleEmitter" type="GPUParticles2D" parent="Entities/World1/SavePoint1"]
+position = Vector2(3, 3)
+emitting = false
+amount = 80
+process_material = SubResource("ParticleProcessMaterial_nknlm")
+one_shot = true
+explosiveness = 1.0
 
 [node name="Campfire1" type="CharacterBody2D" parent="Entities/World1"]
 position = Vector2(104, 208)
@@ -412,6 +483,21 @@ autoplay = "default"
 frame_progress = 0.302566
 centered = false
 
+[node name="Npc1" type="CharacterBody2D" parent="Entities/World1"]
+position = Vector2(112, 208)
+motion_mode = 1
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/Npc1"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_8o8e4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Npc1"]
+sprite_frames = SubResource("SpriteFrames_fnmjl")
+autoplay = "default"
+centered = false
+flip_h = true
+
 [node name="Skeleton1" type="CharacterBody2D" parent="Entities/World1"]
 position = Vector2(240, 96)
 motion_mode = 1
@@ -422,9 +508,10 @@ metadata/_edit_group_ = true
 position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_8o8e4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Skeleton1"]
+[node name="Sprite" type="AnimatedSprite2D" parent="Entities/World1/Skeleton1"]
 sprite_frames = SubResource("SpriteFrames_lesjy")
-animation = &"walk"
+animation = &"idle"
+autoplay = "idle"
 centered = false
 flip_h = true
 
@@ -441,23 +528,29 @@ metadata/_edit_group_ = true
 position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_8o8e4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Skeleton2"]
+[node name="Sprite" type="AnimatedSprite2D" parent="Entities/World1/Skeleton2"]
 sprite_frames = SubResource("SpriteFrames_lesjy")
-animation = &"walk"
-frame_progress = 0.776638
+animation = &"idle"
+autoplay = "idle"
 centered = false
 flip_h = true
 
 [node name="WakeWithRoom" type="Node2D" parent="Entities/World1/Skeleton2"]
 script = ExtResource("6_0506l")
 
+[node name="Collectible" type="Node2D" parent="Entities/World1"]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Entities/World1/Collectible"]
+position = Vector2(8, 128)
+process_material = SubResource("ParticleProcessMaterial_um4nt")
+
 [node name="UI" type="Node2D" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="UI"]
-offset_left = 168.0
-offset_top = 344.0
-offset_right = 328.0
-offset_bottom = 360.0
+offset_left = 460.0
+offset_top = 491.0
+offset_right = 620.0
+offset_bottom = 507.0
 script = ExtResource("2_t073q")
 
 [node name="HP" type="Label" parent="UI/ColorRect"]
@@ -521,38 +614,46 @@ offset_bottom = 13.0
 text = "001597"
 label_settings = SubResource("LabelSettings_mgakh")
 
-[node name="References" type="Node2D" parent="UI/ColorRect"]
+[node name="References" type="Node2D" parent="UI"]
+position = Vector2(168, 344)
+script = ExtResource("13_wfxf6")
 metadata/_edit_lock_ = true
 
-[node name="ReferenceRect" type="ReferenceRect" parent="UI/ColorRect/References"]
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/References"]
 offset_left = -168.0
 offset_top = -328.0
 offset_right = -8.0
 offset_bottom = -200.0
 metadata/_edit_lock_ = true
 
-[node name="ReferenceRect2" type="ReferenceRect" parent="UI/ColorRect/References"]
+[node name="ReferenceRect2" type="ReferenceRect" parent="UI/References"]
 offset_left = -168.0
 offset_top = -200.0
 offset_right = -8.0
 offset_bottom = -72.0
 metadata/_edit_lock_ = true
 
-[node name="ReferenceRect3" type="ReferenceRect" parent="UI/ColorRect/References"]
+[node name="ReferenceRect6" type="ReferenceRect" parent="UI/References"]
+offset_left = -8.0
+offset_top = -200.0
+offset_right = 152.0
+offset_bottom = -72.0
+
+[node name="ReferenceRect3" type="ReferenceRect" parent="UI/References"]
 offset_left = -168.0
 offset_top = -72.0
 offset_right = -8.0
 offset_bottom = 56.0
 metadata/_edit_lock_ = true
 
-[node name="ReferenceRect4" type="ReferenceRect" parent="UI/ColorRect/References"]
+[node name="ReferenceRect4" type="ReferenceRect" parent="UI/References"]
 offset_left = -8.0
 offset_top = -328.0
 offset_right = 152.0
 offset_bottom = -200.0
 metadata/_edit_lock_ = true
 
-[node name="ReferenceRect5" type="ReferenceRect" parent="UI/ColorRect/References"]
+[node name="ReferenceRect5" type="ReferenceRect" parent="UI/References"]
 offset_left = -168.0
 offset_top = -456.0
 offset_right = -8.0

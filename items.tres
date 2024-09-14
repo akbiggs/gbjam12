@@ -1,0 +1,55 @@
+[gd_resource type="JSON" format=3 uid="uid://ds2obxdlcbkcd"]
+
+[resource]
+data = {
+"dagger": {
+"base": {
+"attack": 8.0,
+"range": 10.0,
+"speed": 0.5
+},
+"name": "Dagger",
+"requirements": {
+"dex": 7.0,
+"str": 6.0
+},
+"scaling": {
+"dex": 0.37,
+"str": 0.05
+},
+"weapon_kind": "DAGGER"
+},
+"mace": {
+"base": {
+"attack": 11.0,
+"range": 12.0
+},
+"name": "Mace",
+"requirements": {
+"dex": 7.0,
+"str": 6.0
+},
+"scaling": {
+"dex": 0.37,
+"str": 0.05
+},
+"weapon_kind": "MACE"
+},
+"straight_sword": {
+"base": {
+"attack": 9.5,
+"range": 16.0,
+"speed": 1.0
+},
+"name": "Straight Sword",
+"requirements": {
+"dex": 9.0,
+"str": 9.0
+},
+"scaling": {
+"dex": 0.2,
+"str": 0.2
+},
+"weapon_kind": "SWORD"
+}
+}
