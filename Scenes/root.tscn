@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://dyhdyxn32vqjc"]
+[gd_scene load_steps=51 format=4 uid="uid://dyhdyxn32vqjc"]
 
 [ext_resource type="Script" path="res://Scripts/stats.gd" id="1_dcqpf"]
 [ext_resource type="Texture2D" uid="uid://cih3kkvrl4xed" path="res://spritesheet.png" id="1_dtj6x"]
@@ -6,6 +6,8 @@
 [ext_resource type="FontFile" uid="uid://chhsiu4x5shex" path="res://Fonts/m3x6.ttf" id="3_7vt67"]
 [ext_resource type="FontFile" uid="uid://bma8nu0sxtvno" path="res://Fonts/BigBlue_Terminal_437TT.TTF" id="4_70e2g"]
 [ext_resource type="Script" path="res://Scripts/player.gd" id="5_naxap"]
+[ext_resource type="Script" path="res://Scripts/skeleton.gd" id="5_xx8fr"]
+[ext_resource type="Script" path="res://Scripts/wake_with_room.gd" id="6_0506l"]
 [ext_resource type="Script" path="res://Scripts/campfire.gd" id="6_u3vcg"]
 [ext_resource type="Script" path="res://Scripts/camera.gd" id="7_lkgh4"]
 
@@ -31,23 +33,23 @@ sources/0 = SubResource("TileSetAtlasSource_s80gp")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8o8e4"]
 size = Vector2(7, 7)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8d6un"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0oau"]
 atlas = ExtResource("1_dtj6x")
 region = Rect2(0, 0, 8, 8)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_lvk37"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pkb0b"]
 atlas = ExtResource("1_dtj6x")
 region = Rect2(8, 0, 8, 8)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jqs1l"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_admap"]
 atlas = ExtResource("1_dtj6x")
 region = Rect2(16, 0, 8, 8)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_l8r7h"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_yva3p"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8d6un")
+"texture": SubResource("AtlasTexture_b0oau")
 }],
 "loop": true,
 "name": &"idle",
@@ -55,15 +57,34 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lvk37")
+"texture": SubResource("AtlasTexture_pkb0b")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jqs1l")
+"texture": SubResource("AtlasTexture_admap")
 }],
 "loop": true,
 "name": &"walk",
 "speed": 5.0
 }]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1u5y"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(120, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_l8r7h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j1u5y")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_frtxi"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(136, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dkq0g"]
 atlas = ExtResource("1_dtj6x")
@@ -246,6 +267,52 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_t6vv7"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(40, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ragd"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(56, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yajdt"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(48, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1o8g"]
+atlas = ExtResource("1_dtj6x")
+region = Rect2(40, 8, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lesjy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t6vv7")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ragd")
+}],
+"loop": true,
+"name": &"throw",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_yajdt")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_y1o8g")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
 [sub_resource type="LabelSettings" id="LabelSettings_bk8fu"]
 line_spacing = 0.0
 font = ExtResource("3_7vt67")
@@ -255,6 +322,11 @@ font_color = Color(0, 0, 0, 1)
 font_color = Color(0, 0, 0, 1)
 
 [node name="Root" type="Node2D"]
+
+[node name="Camera" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+unique_name_in_owner = true
+script = ExtResource("7_lkgh4")
+player = NodePath("../Entities/Player")
 
 [node name="Utilities" type="Node2D" parent="."]
 
@@ -270,6 +342,7 @@ tile_set = SubResource("TileSet_njjcm")
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" type="CharacterBody2D" parent="Entities" node_paths=PackedStringArray("sprite", "camera")]
+unique_name_in_owner = true
 position = Vector2(80, 312)
 motion_mode = 1
 script = ExtResource("5_naxap")
@@ -282,46 +355,101 @@ position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_8o8e4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/Player"]
-sprite_frames = SubResource("SpriteFrames_l8r7h")
+sprite_frames = SubResource("SpriteFrames_yva3p")
 animation = &"walk"
-frame = 1
-frame_progress = 0.143024
 centered = false
 
-[node name="SavePoint" type="CharacterBody2D" parent="Entities"]
+[node name="World1" type="Node2D" parent="Entities"]
+
+[node name="MinotaurBoss1" type="CharacterBody2D" parent="Entities/World1"]
+position = Vector2(264, 64)
+motion_mode = 1
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/MinotaurBoss1"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_8o8e4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/MinotaurBoss1"]
+sprite_frames = SubResource("SpriteFrames_l8r7h")
+animation = &"idle"
+centered = false
+
+[node name="Weapon" type="Sprite2D" parent="Entities/World1/MinotaurBoss1"]
+position = Vector2(18, 1)
+rotation = 1.5708
+texture = SubResource("AtlasTexture_frtxi")
+centered = false
+
+[node name="SavePoint1" type="CharacterBody2D" parent="Entities/World1"]
 position = Vector2(80, 64)
 motion_mode = 1
 metadata/_edit_group_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/SavePoint"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/SavePoint1"]
 position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_8o8e4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/SavePoint"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/SavePoint1"]
 sprite_frames = SubResource("SpriteFrames_4hrw6")
 autoplay = "default"
 frame_progress = 0.379937
 centered = false
 
-[node name="Campfire" type="CharacterBody2D" parent="Entities"]
+[node name="Campfire1" type="CharacterBody2D" parent="Entities/World1"]
 position = Vector2(104, 208)
 motion_mode = 1
 script = ExtResource("6_u3vcg")
 metadata/_edit_group_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Campfire"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/Campfire1"]
 position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_8o8e4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/Campfire"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Campfire1"]
 sprite_frames = SubResource("SpriteFrames_jtmft")
 autoplay = "default"
 frame_progress = 0.302566
 centered = false
 
-[node name="Camera" type="Node2D" parent="." node_paths=PackedStringArray("player")]
-script = ExtResource("7_lkgh4")
-player = NodePath("../Entities/Player")
+[node name="Skeleton1" type="CharacterBody2D" parent="Entities/World1"]
+position = Vector2(240, 96)
+motion_mode = 1
+script = ExtResource("5_xx8fr")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/Skeleton1"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_8o8e4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Skeleton1"]
+sprite_frames = SubResource("SpriteFrames_lesjy")
+animation = &"walk"
+centered = false
+flip_h = true
+
+[node name="WakeWithRoom" type="Node2D" parent="Entities/World1/Skeleton1"]
+script = ExtResource("6_0506l")
+
+[node name="Skeleton2" type="CharacterBody2D" parent="Entities/World1"]
+position = Vector2(240, 48)
+motion_mode = 1
+script = ExtResource("5_xx8fr")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/World1/Skeleton2"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_8o8e4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entities/World1/Skeleton2"]
+sprite_frames = SubResource("SpriteFrames_lesjy")
+animation = &"walk"
+frame_progress = 0.776638
+centered = false
+flip_h = true
+
+[node name="WakeWithRoom" type="Node2D" parent="Entities/World1/Skeleton2"]
+script = ExtResource("6_0506l")
 
 [node name="UI" type="Node2D" parent="."]
 
@@ -390,7 +518,7 @@ layout_mode = 0
 offset_left = 21.0
 offset_right = 37.0
 offset_bottom = 13.0
-text = "000000"
+text = "001597"
 label_settings = SubResource("LabelSettings_mgakh")
 
 [node name="References" type="Node2D" parent="UI/ColorRect"]

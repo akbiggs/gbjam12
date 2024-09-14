@@ -1,4 +1,5 @@
 class_name Stats
+extends Node2D
 
 @export var vig = 1
 @export var man = 1
